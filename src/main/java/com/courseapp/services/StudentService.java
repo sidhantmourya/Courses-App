@@ -24,10 +24,19 @@ public class StudentService {
 		return studentRepo.findById(id);
 	}
 	
+	public boolean checkIfStudentExists(Student student) {
+		Student studentFound = studentRepo.findStudentByStudentNameAndAddressAndSex(student.getStudentName(), student.getAddress(), student.getSex());
+		return studentFound != null;
+	}
+	
 	public Student addStudent(Student student) {
-		Student savedStudent = studentRepo.save(student);
+		// check if a student is already registered
+		if(!checkIfStudentExists(student)) {
+			Student savedStudent = studentRepo.save(student);
+			return savedStudent;
+		}
 		
-		return savedStudent;
+		return null;
 	}
 	
 	public List<Student> addStudents(List<Student> students) {
