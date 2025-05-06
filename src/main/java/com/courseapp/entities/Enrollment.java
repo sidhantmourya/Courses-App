@@ -6,8 +6,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Enrollment {
 	
 	@Id
@@ -16,40 +21,11 @@ public class Enrollment {
 	
 	@ManyToOne
 	@JoinColumn(name = "studentId")
+	@NonNull
 	private Student student;
 	
 	@ManyToOne
 	@JoinColumn(name = "courseId")
+	@NonNull
 	private Course course;
-	
-	public Long getEnrollmentId() {
-		return enrollmentId;
-	}
-
-	public void setEnrollmentId(Long enrollmentId) {
-		this.enrollmentId = enrollmentId;
-	}
-
-	public Student getStudent() {
-		return student;
-	}
-
-	public void setStudent(Student student) {
-		this.student = student;
-	}
-
-	public Course getCourse() {
-		return course;
-	}
-
-	public void setCourse(Course course) {
-		this.course = course;
-	}
-
-	@Override
-	public String toString() {
-		return "Enrollment [enrollmentId=" + enrollmentId + ", student=" + student.toString() + ", course=" + course.toString() + "]";
-	}
-	
-	
 }

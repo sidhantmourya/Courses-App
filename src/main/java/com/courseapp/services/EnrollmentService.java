@@ -3,7 +3,6 @@ package com.courseapp.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.courseapp.entities.Student;
@@ -11,54 +10,58 @@ import com.courseapp.entities.Course;
 import com.courseapp.entities.Enrollment;
 import com.courseapp.repositories.EnrollmentRepository;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+
 @Service
+@AllArgsConstructor
 public class EnrollmentService {
 
-	@Autowired
-	private EnrollmentRepository enrollmentRepo;
+	@NonNull
+	private final EnrollmentRepository enrollmentRepo;
 
-	@Autowired
-	private StudentService studentService;
+	@NonNull
+	private final StudentService studentService;
 
-	@Autowired
-	private CourseService courseService;
+	@NonNull
+	private final CourseService courseService;
 
 	public List<Enrollment> getEnrollments() {
 		return enrollmentRepo.findAll();
 	}
 
-	public Optional<Enrollment> getEnrollmentById(Long id) {
+	public Optional<Enrollment> getEnrollmentById(final Long id) {
 		return enrollmentRepo.findById(id);
 	}
 
-	public Enrollment enrollStudent(Long studentId, Long courseId) {
+	public Enrollment enrollStudent(final Long studentId, final Long courseId) {
 
-		Optional<Student> studentOptional = studentService.getStudentById(studentId);
-		Optional<Course> courseOptional = courseService.getCourseById(courseId);
+		final Optional<Student> studentOptional = studentService.getStudentById(studentId);
+		final Optional<Course> courseOptional = courseService.getCourseById(courseId);
 
 		if (studentOptional.isEmpty() || courseOptional.isEmpty()) {
 			return null;
 		}
 
-		Student student = studentOptional.get();
-		Course course = courseOptional.get();
+		final Student student = studentOptional.get();
+		final Course course = courseOptional.get();
 
-		Enrollment enrollment = new Enrollment();
+		final Enrollment enrollment = new Enrollment();
 		enrollment.setStudent(student);
 		enrollment.setCourse(course);
 
-		Enrollment savedEnrollment = enrollmentRepo.save(enrollment);
+		final Enrollment savedEnrollment = enrollmentRepo.save(enrollment);
 		return savedEnrollment;
 	}
 
-	public List<Student> findStudentsByCourseId(Long id) {
-		Optional<Course> courseOptional = courseService.getCourseById(id);
+	public List<Student> findStudentsByCourseId(final Long id) {
+		final Optional<Course> courseOptional = courseService.getCourseById(id);
 
 		if (courseOptional.isEmpty()) {
 			return null;
 		}
 
-		Course course = courseOptional.get();
+		final Course course = courseOptional.get();
 
 		Optional<List<Student>> studentsOptional = enrollmentRepo.findByCourse(course);
 
@@ -71,22 +74,22 @@ public class EnrollmentService {
 		return students;
 	}
 
-	public List<Course> findCoursesByStudentId(Long id) {
-		Optional<Student> studentOptional = studentService.getStudentById(id);
+	public List<Course> findCoursesByStudentId(final Long id) {
+		final Optional<Student> studentOptional = studentService.getStudentById(id);
 
 		if (studentOptional.isEmpty()) {
 			return null;
 		}
 
-		Student student = studentOptional.get();
+		final Student student = studentOptional.get();
 
-		Optional<List<Course>> coursesOptional = enrollmentRepo.findByStudent(student);
+		final Optional<List<Course>> coursesOptional = enrollmentRepo.findByStudent(student);
 
 		if (coursesOptional.isEmpty()) {
 			return null;
 		}
 
-		List<Course> courses = coursesOptional.get();
+		final List<Course> courses = coursesOptional.get();
 
 		return courses;
 	}
