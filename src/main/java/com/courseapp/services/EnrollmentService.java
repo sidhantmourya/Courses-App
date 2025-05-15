@@ -12,9 +12,11 @@ import com.courseapp.repositories.EnrollmentRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.log4j.Log4j2;
 
 @Service
 @AllArgsConstructor
+@Log4j2
 public class EnrollmentService {
 
 	@NonNull
@@ -27,10 +29,12 @@ public class EnrollmentService {
 	private final CourseService courseService;
 
 	public List<Enrollment> getEnrollments() {
+		log.info("Fetching all enrollments");
 		return enrollmentRepo.findAll();
 	}
 
 	public Optional<Enrollment> getEnrollmentById(final Long id) {
+		log.info("Fetching enrollment by id={}", id);
 		return enrollmentRepo.findById(id);
 	}
 
@@ -45,12 +49,15 @@ public class EnrollmentService {
 
 		final Student student = studentOptional.get();
 		final Course course = courseOptional.get();
+		
+		log.info("Enrolling student id={} into course id={}", student.getStudentId(), course.getCourseId());
 
 		final Enrollment enrollment = new Enrollment();
 		enrollment.setStudent(student);
 		enrollment.setCourse(course);
 
 		final Enrollment savedEnrollment = enrollmentRepo.save(enrollment);
+		log.info("Enrollment saved: {}", enrollment.getEnrollmentId());
 		return savedEnrollment;
 	}
 
@@ -69,7 +76,9 @@ public class EnrollmentService {
 			return null;
 		}
 
-		List<Student> students = studentsOptional.get();
+		final List<Student> students = studentsOptional.get();
+		
+		log.info("Course id={} has the following students={}", course.getCourseId()(), students);
 
 		return students;
 	}
@@ -90,6 +99,8 @@ public class EnrollmentService {
 		}
 
 		final List<Course> courses = coursesOptional.get();
+		
+		log.info("Student id={} is enrolled in {}", student.getStudentId(), courses);
 
 		return courses;
 	}
