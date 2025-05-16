@@ -1,11 +1,12 @@
 package com.courseapp.entities;
 
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -13,19 +14,20 @@ import lombok.NonNull;
 @Entity
 @Data
 @NoArgsConstructor
-public class Enrollment {
-	
+public class Instructor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long enrollmentId;
-	
-	@ManyToOne
-	@JoinColumn(name = "studentId", nullable = false)
 	@NonNull
-	private Student student;
+	private Long instructorId;
 	
-	@ManyToOne
-	@JoinColumn(name = "courseId", nullable = false)
 	@NonNull
-	private Course course;
+	private String instructorName;
+	
+	@NonNull
+	private String instructorEmail;
+	
+	@OneToMany(mappedBy = "instructor")
+	@NonNull
+	private List<Course> courses;
+	
 }
