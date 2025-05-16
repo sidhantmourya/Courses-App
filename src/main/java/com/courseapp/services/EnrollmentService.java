@@ -78,7 +78,7 @@ public class EnrollmentService {
 
 		final List<Student> students = studentsOptional.get();
 		
-		log.info("Course id={} has the following students={}", course.getCourseId()(), students);
+		log.info("Course id={} has the following students={}", course.getCourseId(), students);
 
 		return students;
 	}
