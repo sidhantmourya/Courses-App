@@ -33,14 +33,19 @@ public class StudentService {
 	}
 	
 	public boolean checkIfStudentExists(@NonNull final Student student) {
-		Student studentFound = studentRepo.findStudentByStudentNameAndAddressAndSex(student.getStudentName(), student.getAddress(), student.getSex());
+		final Student studentFound = studentRepo.findStudentByStudentNameAndAddressAndSex(
+				student.getStudentName(), student.getAddress(), student.getSex()
+		);
+		
 		return !Objects.isNull(studentFound);
 	}
 	
 	public Student addStudent(@NonNull final Student student) {
 		// check if a student is already registered
-		if(!checkIfStudentExists(student)) {
-			Student savedStudent = studentRepo.save(student);
+		
+		if (!checkIfStudentExists(student)) {
+			final Student savedStudent = studentRepo.save(student);
+			
 			log.info("Saved a student with id={}", savedStudent.getStudentId());
 			return savedStudent;
 		}
@@ -49,8 +54,18 @@ public class StudentService {
 	}
 	
 	public List<Student> addStudents(@NonNull final List<Student> students) {
-		List<Student> savedStudents = studentRepo.saveAll(students);
-		log.info("Saved {} students", students.size());
+		final List<Student> distinctStudents = students.stream()
+				.filter(Objects::nonNull)
+				.filter(student -> !checkIfStudentExists(student))
+				.toList();
+		
+		final List<Student> savedStudents = distinctStudents.stream()
+			.map(this::addStudent)
+			.filter(Objects::nonNull)
+			.toList();
+		
+		
+		log.info("Saved {} students", savedStudents.size());
 		return savedStudents;
 	}
 	
