@@ -1,11 +1,11 @@
 package com.courseapp.services;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.courseapp.entities.Course;
 import com.courseapp.entities.Instructor;
 import com.courseapp.repositories.InstructorRepository;
 
@@ -39,7 +39,11 @@ public class InstructorService {
 	}
 
 	public List<Instructor> addInstructors(@NonNull final List<Instructor> instructors) {
-		final List<Instructor> savedInstructors = this.instructorRepo.saveAll(instructors);
+		final List<Instructor> savedInstructors = instructors.stream()
+			.filter(Objects::nonNull)
+			.map(this::addInstructor)
+			.toList();
+		
 		log.info("Saved {} instructors", savedInstructors.size());
 		
 		return savedInstructors;
