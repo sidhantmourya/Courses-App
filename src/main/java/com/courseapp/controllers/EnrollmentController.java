@@ -15,6 +15,7 @@ import com.courseapp.entities.Student;
 import com.courseapp.services.EnrollmentService;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -24,8 +25,10 @@ import lombok.NonNull;
 public class EnrollmentController {
 	
 	@Data
+	@Builder
+	@AllArgsConstructor
 	@NoArgsConstructor
-	private static class EnrollmentRequest {
+	static class EnrollmentRequest {
 		private Long courseId;
 		private Long studentId;
 	}
@@ -40,7 +43,7 @@ public class EnrollmentController {
 	}
 	
 	@GetMapping("/api/enrollment/{id}")
-	public Optional<Enrollment> getEnrollmentById(final Long id) {
+	public Optional<Enrollment> getEnrollmentById(@PathVariable("id") final Long id) {
 		return enrollmentService.getEnrollmentById(id);
 	}
 	
