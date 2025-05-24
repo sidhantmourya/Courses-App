@@ -1,5 +1,6 @@
 package com.courseapp.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,9 @@ public class CourseServiceTests {
 	@Mock
 	private CourseRepository courseRepository;
 	
+	@Mock
+	private InstructorService instructorService;
+	
 	@InjectMocks
 	private CourseService courseService;
 	
@@ -27,7 +31,7 @@ public class CourseServiceTests {
 			.instructorId(1L)
 			.instructorName("instructorName")
 			.instructorEmail("instructor@email.com")
-			.courses(List.of())
+			.courses(new ArrayList<>())
 			.build();
 	
 	private final List<Course> courses = List.of(
@@ -93,6 +97,82 @@ public class CourseServiceTests {
 		final Course savedCourse = courseService.addCourse(course);
 		
 		Assertions.assertNotNull(savedCourse);
+		
+		Mockito.verify(courseRepository, Mockito.times(1))
+			.save(Mockito.any(Course.class));
+	}
+	
+	@Test
+	public void test_assignInstructorToCourse_success() {
+		final Course course = courses.get(0);
+		
+		Mockito.when(courseRepository.findById(Mockito.anyLong()))
+			.thenReturn(Optional.of(course));
+		
+		Mockito.when(instructorService.getInstructor(Mockito.anyLong()))
+			.thenReturn(Optional.of(instructor));
+		
+		Mockito.when(courseRepository.save(Mockito.any(Course.class)))
+			.thenReturn(course);		
+		
+		final Course updatedCourse = courseService.assignInstructorToCourse(1L, 1L);
+		
+		Assertions.assertNotNull(updatedCourse);
+								
+		Mockito.verify(courseRepository, Mockito.times(1))
+			.save(Mockito.any(Course.class));
+	}
+	
+	@Test
+	public void test_assignInstructorToCourse_courseIsNull() {
+		Mockito.when(courseRepository.findById(Mockito.anyLong()))
+			.thenReturn(Optional.empty());
+	
+		Mockito.when(instructorService.getInstructor(Mockito.anyLong()))
+			.thenReturn(Optional.of(instructor));
+		
+		final Course updatedCourse = courseService.assignInstructorToCourse(99L, 99L);
+		
+		Assertions.assertNull(updatedCourse);
+		
+		Mockito.verify(courseRepository, Mockito.never())
+			.save(Mockito.any(Course.class));
+	}
+	
+	@Test
+	public void test_assignInstructorToCourse_InstructorIsNull() {
+		final Course course = courses.get(0);
+		
+		Mockito.when(courseRepository.findById(Mockito.anyLong()))
+			.thenReturn(Optional.of(course));
+		
+		Mockito.when(instructorService.getInstructor(Mockito.anyLong()))
+			.thenReturn(Optional.empty());
+		
+		final Course updatedCourse = courseService.assignInstructorToCourse(99L, 99L);
+		
+		Assertions.assertNull(updatedCourse);
+		
+		Mockito.verify(courseRepository, Mockito.never())
+			.save(Mockito.any(Course.class));
+	}
+	
+	@Test
+	public void test_assignInstructorToCourse_instructorAlreadyAssigned() {
+		final Course course = courses.get(0);
+		
+		final Instructor instructor = this.instructor;
+		instructor.setCourses(courses);
+		
+		Mockito.when(courseRepository.findById(Mockito.anyLong()))
+			.thenReturn(Optional.of(course));
+		
+		Mockito.when(instructorService.getInstructor(Mockito.anyLong()))
+			.thenReturn(Optional.of(instructor));
+		
+		final Course updatedCourse = courseService.assignInstructorToCourse(1L, 1L);
+		
+		Assertions.assertNotNull(updatedCourse);
 		
 		Mockito.verify(courseRepository, Mockito.times(1))
 			.save(Mockito.any(Course.class));
