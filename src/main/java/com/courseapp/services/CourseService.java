@@ -1,11 +1,14 @@
 package com.courseapp.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.courseapp.entities.Course;
+import com.courseapp.entities.Instructor;
 import com.courseapp.repositories.CourseRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,9 @@ public class CourseService {
 	
 	@NonNull
 	private final CourseRepository courseRepo;
+	
+	@NonNull
+	private final InstructorService instructorService;
 	
 	
 	public List<Course> getCourses() {
@@ -43,5 +49,33 @@ public class CourseService {
 		return savedCourses;
 	}
 	
-	
+	public Course assignInstructorToCourse(final Long courseId, final Long instructorId) {
+		final Course course = this.getCourseById(courseId)
+				.orElse(null);
+		
+		final Instructor instructor = this.instructorService.getInstructor(instructorId)
+				.orElse(null);
+		
+		if (Objects.isNull(course)) {
+			log.error("Course with id={} not found", courseId);
+			return null;
+		}
+		
+		if (Objects.isNull(instructor)) {
+			log.error("Instructor with id={} not found", instructorId);
+			return null;
+		}
+		
+		course.setInstructor(instructor);
+		
+		if (!instructor.getCourses().contains(course)) {
+			instructor.getCourses().add(course);
+		}
+		
+		final Course updatedCourse = courseRepo.save(course);
+		
+		log.info("Assigned instructor id={} to {}.", instructorId, updatedCourse);
+		
+		return course;
+	}
 }
