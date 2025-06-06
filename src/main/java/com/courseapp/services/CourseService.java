@@ -1,6 +1,5 @@
 package com.courseapp.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -11,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.courseapp.entities.Course;
 import com.courseapp.entities.Instructor;
 import com.courseapp.repositories.CourseRepository;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -40,14 +40,14 @@ public class CourseService {
 	
 	@Transactional
 	public Course addCourse(@NonNull final Course course) {
-		Course savedCourse = courseRepo.save(course);
+		final Course savedCourse = courseRepo.save(course);
 		log.info("Saved a course with id={}", savedCourse.getCourseId());
 		return savedCourse;
 	}
 	
 	@Transactional
 	public List<Course> addCourses(@NonNull final List<Course> courses) {
-		List<Course> savedCourses = courseRepo.saveAll(courses);
+		final List<Course> savedCourses = courseRepo.saveAll(courses);
 		log.info("Saved {} courses", courses.size());
 		
 		return savedCourses;

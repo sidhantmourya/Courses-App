@@ -30,6 +30,7 @@ public class EnrollmentController {
 	@NoArgsConstructor
 	static class EnrollmentRequest {
 		private Long courseId;
+		
 		private Long studentId;
 	}
 	

@@ -34,14 +34,14 @@ public class StudentController {
 	
 	@PostMapping("/api/student")
 	public Student addStudent(@RequestBody @NonNull final Student student) {
-		Student addedStudent = studentService.addStudent(student);
+		final Student addedStudent = studentService.addStudent(student);
 		
 		return addedStudent;
 	}
 	
 	@PostMapping("/api/students")
 	public List<Student> addStudents(@NonNull final List<Student> students) {
-		List<Student> addedStudents = studentService.addStudents(students);
+		final List<Student> addedStudents = studentService.addStudents(students);
 		
 		return addedStudents;
 	}

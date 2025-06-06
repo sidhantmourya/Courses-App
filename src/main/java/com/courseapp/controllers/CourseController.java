@@ -35,14 +35,14 @@ public class CourseController {
 		
 	@PostMapping("/api/course")
 	public Course addCourse(@RequestBody @NonNull final Course course) {
-		Course savedCourse = courseService.addCourse(course);
+		final Course savedCourse = courseService.addCourse(course);
 		
 		return savedCourse;
 	}
 	
 	@PostMapping("/api/courses")
 	public List<Course> addCourse(@RequestBody @NonNull final List<Course> courses) {
-		List<Course> savedCourses = courseService.addCourses(courses);
+		final List<Course> savedCourses = courseService.addCourses(courses);
 		
 		return savedCourses;
 	}

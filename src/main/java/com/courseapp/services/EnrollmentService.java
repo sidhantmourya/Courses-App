@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.courseapp.entities.Student;
 import com.courseapp.entities.Course;
 import com.courseapp.entities.Enrollment;
+import com.courseapp.entities.Student;
 import com.courseapp.repositories.EnrollmentRepository;
 
 import lombok.AllArgsConstructor;
@@ -75,7 +75,7 @@ public class EnrollmentService {
 
 		final Course course = courseOptional.get();
 
-		Optional<List<Student>> studentsOptional = enrollmentRepo.findByCourse(course);
+		final Optional<List<Student>> studentsOptional = enrollmentRepo.findByCourse(course);
 
 		if (studentsOptional.isEmpty()) {
 			return null;
