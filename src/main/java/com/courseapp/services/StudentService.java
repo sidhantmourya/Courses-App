@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.courseapp.entities.Student;
 import com.courseapp.repositories.StudentRepository;
@@ -21,12 +22,13 @@ public class StudentService {
 	@NonNull
 	private final StudentRepository studentRepo;
 	
-	
+	@Transactional(readOnly = true)
 	public List<Student> getStudents() {
 		log.info("Fetching all students");
 		return studentRepo.findAll();
 	}
 
+	@Transactional(readOnly = true)
 	public Optional<Student> getStudentById(final Long id) {
 		log.info("Fetching student with id={}", id);
 		return studentRepo.findById(id);
@@ -40,6 +42,7 @@ public class StudentService {
 		return !Objects.isNull(studentFound);
 	}
 	
+	@Transactional
 	public Student addStudent(@NonNull final Student student) {
 		// check if a student is already registered
 		
@@ -53,6 +56,7 @@ public class StudentService {
 		return null;
 	}
 	
+	@Transactional
 	public List<Student> addStudents(@NonNull final List<Student> students) {
 		final List<Student> distinctStudents = students.stream()
 				.filter(Objects::nonNull)

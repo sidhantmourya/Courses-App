@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.courseapp.entities.Instructor;
 import com.courseapp.repositories.InstructorRepository;
@@ -21,16 +22,19 @@ public class InstructorService {
 	@NonNull
 	private final InstructorRepository instructorRepo;
 	
+	@Transactional(readOnly = true)
 	public List<Instructor> getInstructors() {
 		log.info("Fetching all instructors");
 		return this.instructorRepo.findAll();
 	}
 	
+	@Transactional(readOnly = true)
 	public Optional<Instructor> getInstructor(final Long id) {
 		log.info("Fetching instructor with id={}", id);
 		return this.instructorRepo.findById(id);
 	}
 	
+	@Transactional
 	public Instructor addInstructor(@NonNull final Instructor instructor) {
 		final Instructor savedInstructor = this.instructorRepo.save(instructor);
 		log.info("Saved an instructor with id={}", savedInstructor.getInstructorId());
@@ -38,6 +42,7 @@ public class InstructorService {
 		return savedInstructor;
 	}
 
+	@Transactional
 	public List<Instructor> addInstructors(@NonNull final List<Instructor> instructors) {
 		final List<Instructor> savedInstructors = instructors.stream()
 			.filter(Objects::nonNull)

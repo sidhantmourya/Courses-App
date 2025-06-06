@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.courseapp.entities.Course;
 import com.courseapp.entities.Instructor;
@@ -25,23 +26,26 @@ public class CourseService {
 	@NonNull
 	private final InstructorService instructorService;
 	
-	
+	@Transactional(readOnly = true)
 	public List<Course> getCourses() {
 		log.info("Fetching all courses");
 		return courseRepo.findAll();
 	}
 	
+	@Transactional(readOnly = true)
 	public Optional<Course> getCourseById(final Long id) {
 		log.info("Fetching course with id={}", id);
 		return courseRepo.findById(id);
 	}
 	
+	@Transactional
 	public Course addCourse(@NonNull final Course course) {
 		Course savedCourse = courseRepo.save(course);
 		log.info("Saved a course with id={}", savedCourse.getCourseId());
 		return savedCourse;
 	}
 	
+	@Transactional
 	public List<Course> addCourses(@NonNull final List<Course> courses) {
 		List<Course> savedCourses = courseRepo.saveAll(courses);
 		log.info("Saved {} courses", courses.size());
@@ -49,6 +53,7 @@ public class CourseService {
 		return savedCourses;
 	}
 	
+	@Transactional
 	public Course assignInstructorToCourse(final Long courseId, final Long instructorId) {
 		final Course course = this.getCourseById(courseId)
 				.orElse(null);

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.courseapp.entities.Student;
 import com.courseapp.entities.Course;
@@ -28,16 +29,19 @@ public class EnrollmentService {
 	@NonNull
 	private final CourseService courseService;
 
+	@Transactional(readOnly = true)
 	public List<Enrollment> getEnrollments() {
 		log.info("Fetching all enrollments");
 		return enrollmentRepo.findAll();
 	}
 
+	@Transactional(readOnly = true)
 	public Optional<Enrollment> getEnrollmentById(final Long id) {
 		log.info("Fetching enrollment by id={}", id);
 		return enrollmentRepo.findById(id);
 	}
 
+	@Transactional
 	public Enrollment enrollStudent(final Long studentId, final Long courseId) {
 
 		final Optional<Student> studentOptional = studentService.getStudentById(studentId);
@@ -61,6 +65,7 @@ public class EnrollmentService {
 		return savedEnrollment;
 	}
 
+	@Transactional(readOnly = true)
 	public List<Student> findStudentsByCourseId(final Long id) {
 		final Optional<Course> courseOptional = courseService.getCourseById(id);
 
@@ -82,7 +87,8 @@ public class EnrollmentService {
 
 		return students;
 	}
-
+	
+	@Transactional(readOnly = true)
 	public List<Course> findCoursesByStudentId(final Long id) {
 		final Optional<Student> studentOptional = studentService.getStudentById(id);
 
