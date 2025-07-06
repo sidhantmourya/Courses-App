@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  course-app:
+    build: ../
+    depends_on:
+      - mysql-db
+    networks:
+      - course-network
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/course-app-api
+      SPRING_DATASOURCE_USERNAME: <your-username>
+      SPRING_DATASOURCE_PASSWORD: <your_password>
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_MANAGEMENT_ENDPOINT_EXPOSURE: *
+      SPRING_APP_NAME: course-app
+      SPRING_DATASOURCE_NAME: course-app-api
+
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: <pass>
+      MYSQL_USER: <user>
+      MYSQL_PASSWORD: <usr_pass>
+      MYSQL_DATABASE: course-app-api
+    volumes:
+      - mysql-vol:/var/lib/mysql
+    networks:
+      - course-network
+
+
+volumes:
+  mysql-vol:
+networks:
+  course-network:
+    name: course-network
+
+
+
+
+
