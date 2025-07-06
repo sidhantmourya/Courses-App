@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY target/course-app-0.0.1-SNAPSHOT.jar course-app.jar
 
-EXPOSE 8081
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "course-app.jar"]
